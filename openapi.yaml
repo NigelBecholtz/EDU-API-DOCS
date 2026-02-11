@@ -1,0 +1,671 @@
+openapi: 3.0.3
+info:
+  title: EDU Immosurance API
+  description: |
+    All endpoints are server-to-server. Authentication is via query parameter `api_key`.
+    Use HTTPS only. Do not log or expose the API key.
+
+    ## Common Errors
+    - **401** API key required or invalid
+    - **404** Resource not found (User not found, Organization not found)
+    - **422** Validation error
+  version: 1.0.0
+servers:
+  - url: https://edu.immosurance.net
+    description: EDU Immosurance
+security:
+  - ApiKeyAuth: []
+tags:
+  - name: Admins & Organizations
+    description: Admin and organization management
+  - name: Users
+    description: User management
+  - name: Curricula
+    description: Curriculum management
+  - name: Redirects
+    description: Auto-login redirect URLs
+  - name: Results
+    description: Learning statuses
+  - name: Logs
+    description: Activity and audit logs
+paths:
+  /api/immosurance/admins/sync:
+    post:
+      tags: [Admins & Organizations]
+      summary: Create or Update Admin + Organization
+      operationId: adminsSync
+      parameters:
+        - $ref: '#/components/parameters/ApiKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [immosurance_user_id, immosurance_org_id, email, name, organization_name, is_admin]
+              properties:
+                immosurance_user_id: { type: string, example: user-123 }
+                immosurance_org_id: { type: string, example: org-456 }
+                email: { type: string, format: email }
+                name: { type: string }
+                organization_name: { type: string }
+                is_admin: { type: boolean, example: true }
+            example:
+              immosurance_user_id: user-123
+              immosurance_org_id: org-456
+              email: admin@example.com
+              name: First Last
+              organization_name: Fiscal Business Name
+              is_admin: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              example:
+                organization:
+                  id: 10
+                  immosurance_org_id: org-456
+                  name: Fiscal Business Name
+                user:
+                  id: 99
+                  immosurance_user_id: user-123
+                  email: admin@example.com
+                  name: First Last
+                  is_admin: true
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /api/immosurance/users/exists:
+    get:
+      tags: [Users]
+      summary: Check User Exists
+      operationId: userExists
+      parameters:
+        - $ref: '#/components/parameters/ApiKey'
+        - name: immosurance_user_id
+          in: query
+          required: true
+          schema: { type: string, example: user-123 }
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              example:
+                exists: true
+                is_active: true
+                user_id: 99
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /api/immosurance/users/status:
+    patch:
+      tags: [Users]
+      summary: Deactivate or Reactivate User
+      operationId: userStatusToggle
+      parameters:
+        - $ref: '#/components/parameters/ApiKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [immosurance_user_id, is_active]
+              properties:
+                immosurance_user_id: { type: string, example: user-123 }
+                is_active: { type: boolean, example: false }
+            example:
+              immosurance_user_id: user-123
+              is_active: false
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              example:
+                user_id: 99
+                immosurance_user_id: user-123
+                is_active: false
+                deactivated_at: "2026-01-27T10:15:00.000000Z"
+                reactivated_at: null
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /api/immosurance/users:
+    delete:
+      tags: [Users]
+      summary: Delete User Permanently
+      operationId: userDelete
+      parameters:
+        - $ref: '#/components/parameters/ApiKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [immosurance_user_id]
+              properties:
+                immosurance_user_id: { type: string, example: user-123 }
+                language: { type: string, example: nl, description: Optional. EDU language code. }
+            example:
+              immosurance_user_id: user-123
+              language: nl
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              example:
+                user_id: 99
+                immosurance_user_id: user-123
+                deleted: true
+                revoked:
+                  curricula_detached: 3
+                  user_progress_deleted: 12
+                  assessment_answers_deleted: 24
+                  assessment_attempts_deleted: 6
+                  certificates_deleted: 2
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /api/immosurance/curricula:
+    get:
+      tags: [Curricula]
+      summary: List Curricula for Organization
+      operationId: curriculaList
+      parameters:
+        - $ref: '#/components/parameters/ApiKey'
+        - name: immosurance_org_id
+          in: query
+          required: true
+          schema: { type: string, example: org-456 }
+        - name: status
+          in: query
+          schema: { type: string, enum: ['', 'active', 'inactive'], default: '' }
+          description: Optional. Filter by active or inactive curricula. Empty = all.
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              example:
+                data:
+                  - id: 1
+                    title:
+                      en: Wwft Basics
+                    description:
+                      en: "..."
+                    is_global: false
+                    is_active: true
+                    base_is_active: true
+                    org_is_active: true
+                    active_employees:
+                      - user_id: 10
+                        immosurance_user_id: user-2
+                        immosurance_user_name: John Doe
+                        name: John Doe
+                        email: john@example.com
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /api/immosurance/curricula/{curriculum}/status:
+    patch:
+      tags: [Curricula]
+      summary: Set Curriculum Active/Inactive (Org)
+      operationId: curriculumStatus
+      parameters:
+        - $ref: '#/components/parameters/ApiKey'
+        - name: curriculum
+          in: path
+          required: true
+          schema: { type: integer, example: 1, default: 1 }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [immosurance_org_id, is_active]
+              properties:
+                immosurance_org_id: { type: string, example: org-456 }
+                is_active: { type: boolean, example: false }
+            example:
+              immosurance_org_id: org-456
+              is_active: false
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              example:
+                id: 1
+                is_active: false
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /api/immosurance/curricula/{curriculum}/start:
+    post:
+      tags: [Redirects]
+      summary: Start Course (Redirect with Auto-Login)
+      operationId: startCourse
+      parameters:
+        - $ref: '#/components/parameters/ApiKey'
+        - name: curriculum
+          in: path
+          required: true
+          schema: { type: integer, example: 1, default: 1 }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [immosurance_user_id]
+              properties:
+                immosurance_user_id: { type: string, example: user-123 }
+                language: { type: string, example: nl, description: Optional. EDU language code. }
+            example:
+              immosurance_user_id: user-123
+              language: nl
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              example:
+                curriculum_id: 1
+                redirect_path: /my/curricula/1
+                redirect_url: https://edu.immosurance.net/auth/immosurance-login?token=...
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /api/immosurance/curricula/add:
+    post:
+      tags: [Redirects]
+      summary: Redirect Admin to Add Curriculum (Auto-Login)
+      operationId: addCurriculumRedirect
+      parameters:
+        - $ref: '#/components/parameters/ApiKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [immosurance_admin_user_id]
+              properties:
+                immosurance_admin_user_id: { type: string, example: user-123 }
+                language: { type: string, example: nl, description: Optional. EDU language code. }
+            example:
+              immosurance_admin_user_id: user-123
+              language: nl
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              example:
+                redirect_path: /curricula/create
+                redirect_url: https://edu.immosurance.net/auth/immosurance-login?token=...
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /api/immosurance/curricula/{curriculum}/edit:
+    post:
+      tags: [Redirects]
+      summary: Redirect Admin to Curriculum Page (Auto-Login)
+      operationId: editCurriculumRedirect
+      parameters:
+        - $ref: '#/components/parameters/ApiKey'
+        - name: curriculum
+          in: path
+          required: true
+          schema: { type: integer, example: 3, default: 3 }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [immosurance_admin_user_id]
+              properties:
+                immosurance_admin_user_id: { type: string, example: user-123 }
+                language: { type: string, example: nl, description: Optional. EDU language code. }
+            example:
+              immosurance_admin_user_id: user-123
+              language: nl
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              example:
+                curriculum_id: 3
+                redirect_path: /curricula/3
+                redirect_url: https://edu.immosurance.net/auth/immosurance-login?token=...
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /api/immosurance/curricula/{curriculum}/users/status:
+    patch:
+      tags: [Curricula]
+      summary: Set Curriculum Active/Inactive for Single User
+      operationId: userCurriculumStatus
+      parameters:
+        - $ref: '#/components/parameters/ApiKey'
+        - name: curriculum
+          in: path
+          required: true
+          schema: { type: integer, example: 1 }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [immosurance_user_id, is_active]
+              properties:
+                immosurance_user_id: { type: string, example: user-123 }
+                is_active: { type: boolean, example: false }
+            example:
+              immosurance_user_id: user-123
+              is_active: false
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              example:
+                curriculum_id: 1
+                user_id: 99
+                immosurance_user_id: user-123
+                is_active_for_user: false
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /api/immosurance/curricula/{curriculum}/users/status/all:
+    patch:
+      tags: [Curricula]
+      summary: Set Curriculum Active/Inactive for All Users (Org)
+      operationId: allUsersCurriculumStatus
+      parameters:
+        - $ref: '#/components/parameters/ApiKey'
+        - name: curriculum
+          in: path
+          required: true
+          schema: { type: integer, example: 1, default: 1 }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [immosurance_org_id, is_active]
+              properties:
+                immosurance_org_id: { type: string, example: org-456 }
+                is_active: { type: boolean, example: false }
+            example:
+              immosurance_org_id: org-456
+              is_active: false
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              example:
+                curriculum_id: 1
+                organization_id: 5
+                immosurance_org_id: org-456
+                is_active_for_user: false
+                updated_count: 30
+                created_count: 12
+                total_affected: 42
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /api/immosurance/results:
+    get:
+      tags: [Results]
+      summary: Learning Statuses (Results)
+      operationId: results
+      parameters:
+        - $ref: '#/components/parameters/ApiKey'
+        - name: immosurance_user_id
+          in: query
+          schema: { type: string, default: '', example: user-123 }
+          description: User ID (when not using scope=global)
+        - name: scope
+          in: query
+          schema: { type: string, enum: ['', 'global'], default: '' }
+          description: Set to global for cross-org access (requires scope=global API key). Empty = org scope.
+        - name: immosurance_org_id
+          in: query
+          schema: { type: string, default: '', example: org-456 }
+          description: Org filter when scope=global; otherwise for admin context
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              example:
+                - user_id: 99
+                  immosurance_user_id: user-123
+                  immosurance_user_name: John Doe
+                  curriculums:
+                    - course_id: 1
+                      course_name:
+                        en: Basic Safety
+                      updated_last: "2026-01-26T10:15:00.000000Z"
+                      total_completion_percentage: 50
+                      status: active
+                      certification_status: certified
+                      trainings:
+                        - training_id: 10
+                          training_name:
+                            en: Intro Training
+                          completion_status: completed
+                          latest_score_percent: 100
+                          date_last_completion: "2026-01-26T10:15:00.000000Z"
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /api/immosurance/user-activity-logs:
+    get:
+      tags: [Logs]
+      summary: User Activity Logs
+      operationId: userActivityLogs
+      parameters:
+        - $ref: '#/components/parameters/ApiKey'
+        - name: immosurance_user_id
+          in: query
+          required: true
+          schema: { type: string, example: user-123 }
+        - name: date_from
+          in: query
+          schema: { type: string, format: date, default: '' }
+          description: Filter from date (YYYY-MM-DD)
+        - name: date_to
+          in: query
+          schema: { type: string, format: date, default: '' }
+          description: Filter to date (YYYY-MM-DD)
+        - name: event_type
+          in: query
+          schema:
+            type: string
+            enum: ['', 'login', 'logout', 'training_complete', 'assessment_submit', 'certificate_issued', 'module_start', 'training_start']
+            default: ''
+        - name: limit
+          in: query
+          schema: { type: integer, minimum: 1, maximum: 500, default: 100 }
+          description: Max results (default 100)
+        - name: lang
+          in: query
+          schema:
+            type: string
+            enum: ['', 'en', 'es', 'de', 'fr', 'it', 'nl', 'ro', 'el', 'sq', 'sk', 'lv', 'bg', 'fi', 'ca']
+            default: ''
+          description: Language for translated event_type, status
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              example:
+                - id: 1
+                  event_type: training_complete
+                  description: Training voltooid
+                  description_key: activity_log.desc.training_complete
+                  event_type_translated: Training voltooid
+                  status_translated: Succes
+                  status: success
+                  created_at: "2026-02-11T10:15:00.000000Z"
+                  metadata:
+                    training_id: 10
+                    training_title: Intro Training
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /api/immosurance/curriculum-audit-logs:
+    get:
+      tags: [Logs]
+      summary: Curriculum Audit Logs
+      operationId: curriculumAuditLogs
+      parameters:
+        - $ref: '#/components/parameters/ApiKey'
+        - name: immosurance_org_id
+          in: query
+          schema: { type: string, default: '', example: org-456 }
+          description: Org ID (required unless scope=global)
+        - name: scope
+          in: query
+          schema: { type: string, enum: ['', 'global'], default: '' }
+          description: Set to global for cross-org access (requires scope=global API key). Empty = org scope.
+        - name: date_from
+          in: query
+          schema: { type: string, format: date, default: '' }
+          description: Filter from date (YYYY-MM-DD)
+        - name: date_to
+          in: query
+          schema: { type: string, format: date, default: '' }
+          description: Filter to date (YYYY-MM-DD)
+        - name: entity_type
+          in: query
+          schema:
+            type: string
+            enum: ['', 'curriculum', 'training', 'assessment', 'curriculum_user_assignment', 'vimeo']
+            default: ''
+        - name: limit
+          in: query
+          schema: { type: integer, minimum: 1, maximum: 500, default: 100 }
+          description: Max results (default 100)
+        - name: lang
+          in: query
+          schema:
+            type: string
+            enum: ['', 'en', 'es', 'de', 'fr', 'it', 'nl', 'ro', 'el', 'sq', 'sk', 'lv', 'bg', 'fi', 'ca']
+            default: ''
+          description: Language for translated entity_type, action, description
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              example:
+                - id: 1
+                  entity_type: training
+                  entity_type_translated: Training
+                  action: updated
+                  action_translated: Bijgewerkt
+                  description: "Training #10 Bijgewerkt"
+                  user_id: 99
+                  curriculum_id: 1
+                  training_id: 10
+                  assessment_id: null
+                  metadata: {}
+                  created_at: "2026-02-11T10:15:00.000000Z"
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+components:
+  parameters:
+    ApiKey:
+      name: api_key
+      in: query
+      required: true
+      schema: { type: string }
+      description: Your API key (configure on API Key page, then paste here)
+  responses:
+    Unauthorized:
+      description: API key required or invalid
+      content:
+        application/json:
+          examples:
+            required:
+              value: { message: "API key is required." }
+            invalid:
+              value: { message: "Invalid API key." }
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          examples:
+            user:
+              value: { message: "User not found." }
+            org:
+              value: { message: "Organization not found." }
+    ValidationError:
+      description: Validation error
+      content:
+        application/json:
+          example: { message: "Validation failed", errors: [] }
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: query
+      name: api_key
+      description: Your API key. Include as ?api_key=YOUR_API_KEY

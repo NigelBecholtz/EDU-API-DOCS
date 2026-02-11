@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EDU Immosurance API Tester</title>
+    <link rel="stylesheet" href="./styles.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/driver.js@1.3.1/dist/driver.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div>
+        <h1>EDU Immosurance API Tester</h1>
+        <p>Simple tester for EDU Immosurance APIs.</p>
+      </div>
+      <button type="button" class="tour-trigger" id="startTour" title="Start product tour">Start Tour</button>
+    </header>
+
+    <main class="container">
+      <section class="card" id="tour-global-settings">
+        <h2>Global Settings</h2>
+        <div class="grid">
+          <label>
+            Base URL
+            <input id="baseUrl" type="text" value="https://edu.immosurance.net" />
+          </label>
+          <label>
+            API Key (query param)
+            <input id="apiKey" type="text" placeholder="YOUR_API_KEY" />
+          </label>
+        </div>
+        <div class="hint">
+          The API key is appended as <code>?api_key=...</code>. Do not share it.
+        </div>
+      </section>
+
+      <section class="card" id="tour-admins-sync">
+        <h2>Admin + Organization Sync</h2>
+        <form data-endpoint="adminsSync">
+          <div class="grid">
+            <label>immosurance_user_id
+              <input name="immosurance_user_id" type="text" placeholder="user-123" />
+            </label>
+            <label>immosurance_org_id
+              <input name="immosurance_org_id" type="text" placeholder="org-456" />
+            </label>
+            <label>email
+              <input name="email" type="email" placeholder="admin@example.com" />
+            </label>
+            <label>name
+              <input name="name" type="text" placeholder="First Last" />
+            </label>
+            <label>organization_name
+              <input name="organization_name" type="text" placeholder="Fiscal Business Name" />
+            </label>
+            <label>is_admin
+              <select name="is_admin">
+                <option value="true">true</option>
+                <option value="false">false</option>
+              </select>
+            </label>
+          </div>
+          <button type="submit">Send</button>
+        </form>
+      </section>
+
+      <section class="card" id="tour-user-exists">
+        <h2>User Exists</h2>
+        <form data-endpoint="userExists">
+          <div class="grid">
+            <label>immosurance_user_id
+              <input name="immosurance_user_id" type="text" placeholder="user-123" />
+            </label>
+          </div>
+          <button type="submit">Send</button>
+        </form>
+      </section>
+
+      <section class="card" id="tour-user-status-toggle">
+        <h2>User Deactivate / Reactivate</h2>
+        <form data-endpoint="userStatusToggle">
+          <div class="grid">
+            <label>immosurance_user_id
+              <input name="immosurance_user_id" type="text" placeholder="user-123" />
+            </label>
+            <label>is_active
+              <select name="is_active">
+                <option value="true">true</option>
+                <option value="false">false</option>
+              </select>
+            </label>
+          </div>
+          <button type="submit">Send</button>
+        </form>
+        <div class="hint">
+          Deactivating a user keeps curricula assignments and learning data (reactivation restores access).
+        </div>
+      </section>
+
+      <section class="card" id="tour-user-delete">
+        <h2>User Delete (Permanent)</h2>
+        <form data-endpoint="userDelete">
+          <div class="grid">
+            <label>immosurance_user_id
+              <input name="immosurance_user_id" type="text" placeholder="user-123" />
+            </label>
+            <label>language (optional)
+              <input name="language" type="text" placeholder="nl" />
+            </label>
+          </div>
+          <button type="submit">Send</button>
+        </form>
+        <div class="hint">
+          Permanently deletes the user and revokes curricula assignments and learning data. Response includes <code>revoked</code> counts.
+        </div>
+      </section>
+
+      <section class="card" id="tour-curricula-list">
+        <h2>Curricula List</h2>
+        <form data-endpoint="curriculaList">
+          <div class="grid">
+            <label>immosurance_org_id
+              <input name="immosurance_org_id" type="text" placeholder="org-456" />
+            </label>
+            <label>status (optional)
+              <select name="status">
+                <option value="">(none)</option>
+                <option value="active">active</option>
+                <option value="inactive">inactive</option>
+              </select>
+            </label>
+          </div>
+          <button type="submit">Send</button>
+        </form>
+        <div class="hint">
+          Response includes <code>active_employees</code> array listing all employees who have each curriculum active.
+        </div>
+      </section>
+
+      <section class="card" id="tour-curriculum-status">
+        <h2>Curriculum Active/Inactive (Org)</h2>
+        <form data-endpoint="curriculumStatus">
+          <div class="grid">
+            <label>curriculum_id
+              <input name="curriculum_id" type="number" placeholder="1" />
+            </label>
+            <label>immosurance_org_id
+              <input name="immosurance_org_id" type="text" placeholder="org-456" />
+            </label>
+            <label>is_active
+              <select name="is_active">
+                <option value="true">true</option>
+                <option value="false">false</option>
+              </select>
+            </label>
+          </div>
+          <button type="submit">Send</button>
+        </form>
+      </section>
+
+      <section class="card" id="tour-start-course">
+        <h2>Start Course (Redirect with Auto-Login)</h2>
+        <form data-endpoint="startCourse">
+          <div class="grid">
+            <label>curriculum_id
+              <input name="curriculum_id" type="number" placeholder="1" />
+            </label>
+            <label>immosurance_user_id
+              <input name="immosurance_user_id" type="text" placeholder="user-123" />
+            </label>
+            <label>language (optional)
+              <input name="language" type="text" placeholder="nl" />
+            </label>
+          </div>
+          <button type="submit">Send</button>
+        </form>
+        <div class="hint">
+          The response includes a <code>redirect_url</code> with an automatic login token (valid 5 minutes, single use). Users will be automatically logged in when visiting this URL.
+        </div>
+      </section>
+
+      <section class="card" id="tour-add-curriculum">
+        <h2>Redirect Admin to Add Curriculum (Auto-Login)</h2>
+        <form data-endpoint="addCurriculumRedirect">
+          <div class="grid">
+            <label>immosurance_admin_user_id
+              <input name="immosurance_admin_user_id" type="text" placeholder="user-1" />
+            </label>
+            <label>language (optional)
+              <input name="language" type="text" placeholder="nl" />
+            </label>
+          </div>
+          <button type="submit">Send</button>
+        </form>
+        <div class="hint">
+          The response includes a <code>redirect_url</code> with an automatic login token (valid 5 minutes, single use). Admins are auto-logged in and redirected to the curriculum creation page.
+        </div>
+      </section>
+
+      <section class="card" id="tour-edit-curriculum">
+        <h2>Redirect Admin to Edit Curriculum (Auto-Login)</h2>
+        <form data-endpoint="editCurriculumRedirect">
+          <div class="grid">
+            <label>curriculum_id
+              <input name="curriculum_id" type="number" placeholder="3" />
+            </label>
+            <label>immosurance_admin_user_id
+              <input name="immosurance_admin_user_id" type="text" placeholder="user-1" />
+            </label>
+            <label>language (optional)
+              <input name="language" type="text" placeholder="nl" />
+            </label>
+          </div>
+          <button type="submit">Send</button>
+        </form>
+        <div class="hint">
+          Returns a <code>redirect_url</code> to the EDU curriculum <strong>edit</strong> page for the given curriculum. Admin only. Token valid 5 minutes, single use.
+        </div>
+      </section>
+
+      <section class="card" id="tour-user-status">
+        <h2>Curriculum Active/Inactive (Single User)</h2>
+        <form data-endpoint="userStatus">
+          <div class="grid">
+            <label>curriculum_id
+              <input name="curriculum_id" type="number" placeholder="1" />
+            </label>
+            <label>immosurance_user_id
+              <input name="immosurance_user_id" type="text" placeholder="user-2" />
+            </label>
+            <label>is_active
+              <select name="is_active">
+                <option value="true">true</option>
+                <option value="false">false</option>
+              </select>
+            </label>
+          </div>
+          <button type="submit">Send</button>
+        </form>
+      </section>
+
+      <section class="card" id="tour-all-users-status">
+        <h2>Curriculum Active/Inactive (All Users in Org)</h2>
+        <form data-endpoint="allUsersStatus">
+          <div class="grid">
+            <label>curriculum_id
+              <input name="curriculum_id" type="number" placeholder="1" />
+            </label>
+            <label>immosurance_org_id
+              <input name="immosurance_org_id" type="text" placeholder="org-456" />
+            </label>
+            <label>is_active
+              <select name="is_active">
+                <option value="true">true</option>
+                <option value="false">false</option>
+              </select>
+            </label>
+          </div>
+          <button type="submit">Send</button>
+        </form>
+        <div class="hint">
+          Updates all users within the specified organization. Only affects users in that organization.
+        </div>
+      </section>
+
+      <section class="card" id="tour-results">
+        <h2>Learning Statuses (Results)</h2>
+        <form data-endpoint="results" id="resultsForm">
+          <div class="grid">
+            <label>scope
+              <select name="scope">
+                <option value="">org (default)</option>
+                <option value="global">global</option>
+              </select>
+            </label>
+            <label>immosurance_user_id
+              <input name="immosurance_user_id" type="text" placeholder="user-123" />
+            </label>
+            <label>immosurance_org_id (optional for global)
+              <input name="immosurance_org_id" type="text" placeholder="org-456" />
+            </label>
+          </div>
+          <button type="submit">Send</button>
+        </form>
+        <div class="hint">
+          <strong>Behavior:</strong><br/>
+          • If requesting user is an <strong>ADMIN</strong>: Returns data for all employees in the organization (both admins and regular users)<br/>
+          • If requesting user is a <strong>USER</strong>: Returns data only for that specific user<br/>
+          • If <strong>scope=global</strong>: Returns data for all employees across all organizations (requires API key with global scope)<br/>
+          <br/>
+          <strong>Response format:</strong> Array of user objects. When successful, a table appears above the raw JSON:<br/>
+          • <strong>Curriculum row:</strong> Name, Curriculum, Updated, Completion %, <strong>Certification</strong> (at curriculum level), Actions<br/>
+          • <strong>Training rows</strong> (expand curriculum): <strong>Display ID</strong> (training id or <code>FA-{assessment_id}</code> for final/standalone assessments), Training, Completion, Score %, <strong>Date</strong> (last test completion), Actions
+        </div>
+      </section>
+
+      <section class="card" id="tour-user-activity-logs">
+        <h2>User Activity Logs</h2>
+        <form data-endpoint="userActivityLogs">
+          <div class="grid">
+            <label>immosurance_user_id
+              <input name="immosurance_user_id" type="text" placeholder="user-123" />
+            </label>
+            <label>date_from (optional)
+              <input name="date_from" type="date" placeholder="YYYY-MM-DD" />
+            </label>
+            <label>date_to (optional)
+              <input name="date_to" type="date" placeholder="YYYY-MM-DD" />
+            </label>
+            <label>event_type (optional)
+              <select name="event_type">
+                <option value="">(none)</option>
+                <option value="login">login</option>
+                <option value="logout">logout</option>
+                <option value="training_complete">training_complete</option>
+                <option value="assessment_submit">assessment_submit</option>
+                <option value="certificate_issued">certificate_issued</option>
+                <option value="module_start">module_start</option>
+                <option value="training_start">training_start</option>
+              </select>
+            </label>
+            <label>limit (optional, 1–500)
+              <input name="limit" type="number" placeholder="100" min="1" max="500" />
+            </label>
+            <label>lang (optional)
+              <select name="lang">
+                <option value="">(none)</option>
+                <option value="en">en</option>
+                <option value="nl">nl</option>
+                <option value="de">de</option>
+                <option value="fr">fr</option>
+                <option value="es">es</option>
+                <option value="it">it</option>
+                <option value="ro">ro</option>
+                <option value="el">el</option>
+                <option value="sq">sq</option>
+                <option value="sk">sk</option>
+                <option value="lv">lv</option>
+                <option value="bg">bg</option>
+                <option value="fi">fi</option>
+                <option value="ca">ca</option>
+              </select>
+            </label>
+          </div>
+          <button type="submit">Send</button>
+        </form>
+        <div class="hint">
+          Returns activity logs for a user (login, logout, training complete, assessment submit, certificate issued, etc.). Use <code>lang</code> for translated descriptions.
+        </div>
+      </section>
+
+      <section class="card" id="tour-curriculum-audit-logs">
+        <h2>Curriculum Audit Logs</h2>
+        <form data-endpoint="curriculumAuditLogs">
+          <div class="grid">
+            <label>scope
+              <select name="scope">
+                <option value="">org (default)</option>
+                <option value="global">global</option>
+              </select>
+            </label>
+            <label>immosurance_org_id (unless scope=global)
+              <input name="immosurance_org_id" type="text" placeholder="org-456" />
+            </label>
+            <label>date_from (optional)
+              <input name="date_from" type="date" placeholder="YYYY-MM-DD" />
+            </label>
+            <label>date_to (optional)
+              <input name="date_to" type="date" placeholder="YYYY-MM-DD" />
+            </label>
+            <label>entity_type (optional)
+              <select name="entity_type">
+                <option value="">(none)</option>
+                <option value="curriculum">curriculum</option>
+                <option value="training">training</option>
+                <option value="assessment">assessment</option>
+                <option value="curriculum_user_assignment">curriculum_user_assignment</option>
+                <option value="vimeo">vimeo</option>
+              </select>
+            </label>
+            <label>limit (optional, 1–500)
+              <input name="limit" type="number" placeholder="100" min="1" max="500" />
+            </label>
+            <label>lang (optional)
+              <select name="lang">
+                <option value="">(none)</option>
+                <option value="en">en</option>
+                <option value="nl">nl</option>
+                <option value="de">de</option>
+                <option value="fr">fr</option>
+                <option value="es">es</option>
+                <option value="it">it</option>
+                <option value="ro">ro</option>
+                <option value="el">el</option>
+                <option value="sq">sq</option>
+                <option value="sk">sk</option>
+                <option value="lv">lv</option>
+                <option value="bg">bg</option>
+                <option value="fi">fi</option>
+                <option value="ca">ca</option>
+              </select>
+            </label>
+          </div>
+          <button type="submit">Send</button>
+        </form>
+        <div class="hint">
+          Returns audit logs for curriculum-related changes (CRUD on curricula, trainings, assessments, user assignments, Vimeo uploads). Use <code>scope=global</code> for cross-org access. Use <code>lang</code> for translated entity_type, action, and description.
+        </div>
+      </section>
+
+      <section class="card" id="tour-response">
+        <h2>Response</h2>
+        <div id="responseMeta" class="meta"></div>
+        <div id="responseActions"></div>
+        <div id="curriculaListWrap" class="curricula-list-wrap" hidden>
+          <div class="curricula-list-header">
+            <h3>Active curriculums</h3>
+            <div class="curricula-list-header-actions">
+              <button type="button" class="icon-btn" title="Refresh" id="curriculaListRefresh">↻</button>
+            </div>
+          </div>
+          <div id="curriculaListTable" class="curricula-list-table"></div>
+        </div>
+        <div id="activityLogsWrap" class="log-overview-wrap activity-logs-wrap" hidden>
+          <div class="log-overview-header">
+            <h3>User activity logs</h3>
+            <button type="button" class="icon-btn" title="Refresh" id="activityLogsRefresh">↻</button>
+          </div>
+          <div id="activityLogsTable" class="log-overview-table"></div>
+        </div>
+        <div id="auditLogsWrap" class="log-overview-wrap audit-logs-wrap" hidden>
+          <div class="log-overview-header">
+            <h3>Curriculum audit logs</h3>
+            <button type="button" class="icon-btn" title="Refresh" id="auditLogsRefresh">↻</button>
+          </div>
+          <div id="auditLogsTable" class="log-overview-table"></div>
+        </div>
+        <div id="learningStatusesWrap" class="learning-statuses-wrap" hidden>
+          <div class="learning-statuses-header">
+            <h3>Learning statuses</h3>
+            <button type="button" class="icon-btn" title="Refresh" id="learningStatusesRefresh">↻</button>
+          </div>
+          <div id="learningStatusesTable" class="learning-statuses-table"></div>
+        </div>
+        <pre id="responseOutput" class="output">{}</pre>
+      </section>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/driver.js@1.3.1/dist/driver.js.iife.js"></script>
+    <script src="./tour.js"></script>
+    <script src="./app.js"></script>
+  </body>
+</html>

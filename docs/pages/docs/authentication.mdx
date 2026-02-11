@@ -1,0 +1,36 @@
+# Authentication
+
+All API requests require authentication via the `api_key` query parameter.
+
+## API Key
+
+Vul je API key in op de [API Key](/api-key) pagina om deze te gebruiken in de API Reference Playground. Selecteer daar de identiteit **EDU Immosurance API Key** en je key wordt automatisch meegestuurd.
+
+Include your API key in every request:
+
+```
+?api_key=YOUR_API_KEY
+```
+
+**Example:**
+
+```
+GET https://edu.immosurance.net/api/immosurance/users/exists?immosurance_user_id=user-123&api_key=YOUR_API_KEY
+```
+
+## Security Notes
+
+- Use **HTTPS only** — never send requests over HTTP
+- **Do not log or expose** your API key
+- Store the API key in environment variables or secure secrets management
+- Rotate keys if they may have been compromised
+
+## Common Errors
+
+| Status | Message | Cause |
+|--------|---------|-------|
+| 401 | API key is required | Missing `api_key` parameter |
+| 401 | Invalid API key | Invalid or expired API key |
+| 404 | User not found | User does not exist |
+| 404 | Organization not found | Organization does not exist |
+| 422 | Validation error | Invalid request body or parameters |

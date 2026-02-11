@@ -1,0 +1,15 @@
+{
+  "name": "edu-immosurance-docs",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "zudoku dev",
+    "build": "zudoku build",
+    "preview": "zudoku preview"
+  },
+  "devDependencies": {
+    "zudoku": "^0.68.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
+  }
+}
