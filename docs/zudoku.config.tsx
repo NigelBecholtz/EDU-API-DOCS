@@ -31,7 +31,7 @@ const eduApiKeyPlugin = createApiIdentityPlugin({
 });
 
 const config: ZudokuConfig = {
-  basePath: "/apitesting",
+  basePath: "",
   site: {
     title: "EDU Immosurance API",
   },
