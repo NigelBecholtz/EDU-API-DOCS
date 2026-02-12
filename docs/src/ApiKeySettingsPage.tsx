@@ -57,12 +57,12 @@ export const ApiKeySettingsPage = () => {
       </Head>
       <div className="max-w-2xl space-y-6">
         <div>
-          <h2 className="text-xl font-semibold">API Key voor Playground</h2>
+          <h2 className="text-xl font-semibold">API Key for Playground</h2>
           <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
-            Vul hier je EDU Immosurance API key in. In de{" "}
-            <Link to="/api">API Reference</Link> Playground staat bij Query
-            Parameters een veld <strong>api_key</strong> — vink het aan en plak
-            je key daar.
+            Enter your EDU Immosurance API key here. In the{" "}
+            <Link to="/api">API Reference</Link> Playground, under Query
+            Parameters, there is an <strong>api_key</strong> field — enable it and paste
+            your key there.
           </p>
         </div>
 
@@ -78,46 +78,46 @@ export const ApiKeySettingsPage = () => {
             type="password"
             value={apiKey}
             onChange={(e) => setApiKey(e.target.value)}
-            placeholder="Vul je API key in..."
+            placeholder="Enter your API key..."
             className="w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100"
             autoComplete="off"
           />
         </div>
 
         <div className="flex flex-wrap gap-2 gap-y-2">
-          <Button onClick={handleSave}>Opslaan</Button>
+          <Button onClick={handleSave}>Save</Button>
           <Button
             variant="outline"
             onClick={handleCopy}
             disabled={!apiKey.trim()}
           >
-            {copied ? "Gekopieerd!" : "Kopieer naar klembord"}
+            {copied ? "Copied!" : "Copy to clipboard"}
           </Button>
           <Button variant="outline" onClick={handleClear}>
-            Wissen
+            Clear
           </Button>
           {saved && (
             <span className="self-center text-sm text-green-600 dark:text-green-400">
-              Opgeslagen.
+              Saved.
             </span>
           )}
         </div>
 
         <div className="rounded-lg border border-blue-200 bg-blue-50 p-4 text-sm dark:border-blue-800 dark:bg-blue-950/30">
-          <strong>Gebruik in de Playground:</strong>
+          <strong>Using in the Playground:</strong>
           <ol className="mt-2 list-decimal list-inside space-y-1">
-            <li>Klik op een endpoint in de API Reference</li>
-            <li>Open de Playground (Try it)</li>
-            <li>Bij Query Parameters: vink <strong>api_key</strong> aan</li>
-            <li>Plak je key (gebruik de kopieerknop hierboven)</li>
-            <li>Klik Send</li>
+            <li>Click an endpoint in the API Reference</li>
+            <li>Open the Playground (Try it)</li>
+            <li>Under Query Parameters: enable <strong>api_key</strong></li>
+            <li>Paste your key (use the copy button above)</li>
+            <li>Click Send</li>
           </ol>
         </div>
 
         <div className="rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm dark:border-amber-800 dark:bg-amber-950/30">
-          <strong>Beveiliging:</strong> De key wordt alleen in je browser
-          opgeslagen (localStorage). Deel deze pagina niet en log uit na gebruik
-          op gedeelde computers.
+          <strong>Security:</strong> The key is stored only in your browser
+          (localStorage). Do not share this page and log out after use on
+          shared computers.
         </div>
       </div>
     </section>

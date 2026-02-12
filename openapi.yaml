@@ -552,10 +552,10 @@ paths:
               example:
                 - id: 1
                   event_type: training_complete
-                  description: Training voltooid
+                  description: Training completed
                   description_key: activity_log.desc.training_complete
-                  event_type_translated: Training voltooid
-                  status_translated: Succes
+                  event_type_translated: Training completed
+                  status_translated: Success
                   status: success
                   created_at: "2026-02-11T10:15:00.000000Z"
                   metadata:
@@ -617,8 +617,8 @@ paths:
                   entity_type: training
                   entity_type_translated: Training
                   action: updated
-                  action_translated: Bijgewerkt
-                  description: "Training #10 Bijgewerkt"
+                  action_translated: Updated
+                  description: "Training #10 Updated"
                   user_id: 99
                   curriculum_id: 1
                   training_id: 10
