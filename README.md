@@ -573,12 +573,6 @@ With `lang=nl`:
 
 ---
 
-## API Tester
-
-Open `index.html` in a browser to use the interactive API tester. Use **Start Tour** for a guided walkthrough of all endpoints.
-
----
-
 ## Zudoku Documentation
 
 The `docs/` folder contains a **Zudoku**-powered documentation site with:
