@@ -44,9 +44,22 @@ Create or update an organization and its admin user. If they do not exist, they 
   "email": "admin@example.com",
   "name": "First Last",
   "organization_name": "Fiscal Business Name",
-  "is_admin": true
+  "is_admin": true,
+  "organization_group_external_id": "group-789",
+  "organization_group_name": "Group Display Name"
 }
 ```
+
+| Field | Required | Description |
+|-------|----------|-------------|
+| immosurance_user_id | Yes | User identifier from AML |
+| immosurance_org_id | Yes | Organization identifier from AML |
+| email | Yes | Admin email |
+| name | Yes | Admin display name |
+| organization_name | Yes | Organization display name |
+| is_admin | No | Whether user is org admin (default: true) |
+| organization_group_external_id | No | Organization group external_id from Immosurance. When provided: the organization is linked to this group, and the admin is linked as organization group admin. |
+| organization_group_name | No | Organization group display name (used when creating a new group) |
 
 **Success Response (200)**
 
@@ -63,9 +76,16 @@ Create or update an organization and its admin user. If they do not exist, they 
     "email": "admin@example.com",
     "name": "First Last",
     "is_admin": true
+  },
+  "organization_group": {
+    "id": 5,
+    "external_id": "group-789",
+    "name": "Group Name"
   }
 }
 ```
+
+`organization_group` is included when the organization and admin were linked to an organization group. Organization groups are synced from Immosurance; the organization is linked via `organization_group_external_id` in the sync payload.
 
 ---
 

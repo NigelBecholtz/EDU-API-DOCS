@@ -42,14 +42,16 @@ paths:
           application/json:
             schema:
               type: object
-              required: [immosurance_user_id, immosurance_org_id, email, name, organization_name, is_admin]
+              required: [immosurance_user_id, immosurance_org_id, email, name, organization_name]
               properties:
                 immosurance_user_id: { type: string, example: user-123 }
                 immosurance_org_id: { type: string, example: org-456 }
                 email: { type: string, format: email }
                 name: { type: string }
                 organization_name: { type: string }
-                is_admin: { type: boolean, example: true }
+                is_admin: { type: boolean, example: true, description: Whether user is org admin (default true) }
+                organization_group_external_id: { type: string, example: group-789, description: Organization group external_id from Immosurance. When provided, the organization is linked to this group and the admin is linked as organization group admin. }
+                organization_group_name: { type: string, example: Group Display Name, description: Organization group display name (used when creating a new group) }
             example:
               immosurance_user_id: user-123
               immosurance_org_id: org-456
@@ -57,6 +59,8 @@ paths:
               name: First Last
               organization_name: Fiscal Business Name
               is_admin: true
+              organization_group_external_id: group-789
+              organization_group_name: Group Display Name
       responses:
         '200':
           description: Success
@@ -73,6 +77,10 @@ paths:
                   email: admin@example.com
                   name: First Last
                   is_admin: true
+                organization_group:
+                  id: 5
+                  external_id: group-789
+                  name: Group Name
         '401':
           $ref: '#/components/responses/Unauthorized'
         '404':
