@@ -122,20 +122,18 @@ Marks a user as inactive/active. Deactivation does **not** delete curricula assi
 
 ## 1c) Delete User Permanently
 
-Deletes a user and revokes all curricula assignments and learning data.
+Deletes a user and revokes all curricula assignments and learning data. Uses query parameters (no request body) for compatibility with API testing tools and HTTP standards.
 
 **Endpoint**
 
-`DELETE /api/immosurance/users?api_key=YOUR_API_KEY`
+`DELETE /api/immosurance/users?immosurance_user_id=user-123&api_key=YOUR_API_KEY`
 
-**Request Body**
+**Query Parameters**
 
-```json
-{
-  "immosurance_user_id": "user-123",
-  "language": "nl"
-}
-```
+| Parameter | Required | Description |
+|-----------|----------|-------------|
+| `immosurance_user_id` | yes | The user to delete |
+| `api_key` | yes | API authentication |
 
 **Success Response (200)**
 

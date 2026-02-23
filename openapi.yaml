@@ -149,19 +149,11 @@ paths:
       operationId: userDelete
       parameters:
         - $ref: '#/components/parameters/ApiKey'
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required: [immosurance_user_id]
-              properties:
-                immosurance_user_id: { type: string, example: user-123 }
-                language: { type: string, example: nl, description: Optional. EDU language code. }
-            example:
-              immosurance_user_id: user-123
-              language: nl
+        - name: immosurance_user_id
+          in: query
+          required: true
+          schema: { type: string, example: user-123 }
+          description: The user to delete
       responses:
         '200':
           description: Success
