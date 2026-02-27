@@ -1,0 +1,22 @@
+# Components
+
+## e-learning-platform
+
+Purpose: Core EDU application, API endpoints, and role-based dashboards.
+
+| Component | Technology | Use |
+|----------|------------|-----|
+| API Layer | Laravel Controllers (REST) | Immosurance sync, redirects, results, logs |
+| Web App | Inertia.js + React + TypeScript | Admin and learning UI |
+| Database | MySQL | Users, curricula, trainings, assessments, results |
+| Auth | Laravel Auth + API key validation | Web auth and server-to-server authentication |
+| Queue/Jobs | Laravel Queue | Optional async processing (if enabled) |
+
+## Key Folders
+
+- `app/Http/Controllers/Api/Immosurance/` — AML integration endpoints
+- `app/Http/Controllers/` — web controllers for admin/user workflows
+- `app/Models/` — Eloquent models and relations
+- `routes/web.php` and `routes/api.php` — routing definitions
+- `resources/js/` — React/TypeScript pages and layouts
+- `database/migrations/` and `database/seeders/` — schema and seeded content/translations

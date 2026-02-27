@@ -1,0 +1,43 @@
+# Project Overview
+
+## Introduction
+
+The EDU Immosurance project is a Laravel application for learning management and AML-to-EDU integrations.
+
+## Architecture
+
+```text
+┌─────────────────────────────────────┐
+│         e-learning-platform         │
+│       (Laravel + Inertia/React)     │
+│  • Immosurance API integrations      │
+│  • Admin/Super Admin dashboards      │
+│  • Organization Group workflows      │
+└──────────────────┬──────────────────┘
+                   │
+        ┌──────────▼──────────┐
+        │    MySQL Database   │
+        │   (platform data)   │
+        └─────────────────────┘
+```
+
+## Project Structure
+
+| Path | Technology | Purpose |
+|------|------------|---------|
+| `e-learning-platform/` | Laravel + PHP + React/TS | Core app, dashboards, API controllers |
+| `EDU-AML-apitesting/` | Zudoku + OpenAPI | API documentation and testing docs |
+
+## Base URLs
+
+| Environment | URL |
+|-------------|-----|
+| Production App | `https://edu.immosurance.net` |
+| API Base | `https://edu.immosurance.net/api` |
+| API Docs | `https://nigelbecholtz.github.io/EDU-API-DOCS` |
+
+## Next Steps
+
+- [Components](/project/components)
+- [Database & Configuration](/project/database-configuration)
+- [Logins](/project/logins)

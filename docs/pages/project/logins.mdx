@@ -1,0 +1,33 @@
+# Logins
+
+## Overview
+
+The EDU platform uses one login entry point with role-based authorization after sign-in.
+
+## Login URL
+
+- `https://edu.immosurance.net/login`
+
+## Role Access
+
+| Role | Access After Login |
+|------|--------------------|
+| User | Assigned curricula, trainings, assessments, certificates |
+| Admin | Organization dashboards, users, curricula, reports |
+| Organization Group Admin | Group curricula/trainings/assessments, scoped certificates |
+| Super Admin | Platform-wide administration, org/group management |
+
+## API Keys (Integrations)
+
+API keys are not for browser login.
+
+- Used by server-to-server calls from AML to EDU.
+- Sent as query parameter: `api_key=YOUR_API_KEY`.
+- See [Authentication](/docs/authentication) for full details.
+
+## Summary
+
+| Login Type | URL | Purpose |
+|-----------|-----|---------|
+| Web Login | `/login` | Interactive platform access |
+| API Auth | Query `api_key` | Integration and automation |

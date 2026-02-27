@@ -1,0 +1,86 @@
+# Project Overview
+
+This page gives a high-level view of the EDU Immosurance integration and what each API area is used for.
+
+## Integration Model
+
+- **AML** is the client platform.
+- **EDU** is the learning platform server.
+- Communication is **server-to-server** over HTTPS.
+
+## Base URL
+
+```
+https://edu.immosurance.net
+```
+
+## Authentication
+
+All endpoints require `api_key` as a query parameter.
+
+Example:
+
+```
+GET /api/immosurance/users/exists?immosurance_user_id=user-123&api_key=YOUR_API_KEY
+```
+
+## Main API Domains
+
+### 1) Identity & Organization Sync
+
+Used to create or update organizations and admin users from AML.
+
+- Sync admin + organization
+- Optionally link organization to an organization group
+
+### 2) User Lifecycle
+
+Used to manage user existence and access state.
+
+- Check if user exists
+- Deactivate/reactivate user
+- Permanently delete user
+
+### 3) Curriculum Management
+
+Used to control curriculum availability and assignment behavior.
+
+- List curricula for organization
+- Set curriculum active/inactive
+- Set curriculum user status (single user or all users)
+
+### 4) Redirect Flows (Auto-Login)
+
+Used to generate secure redirect URLs from AML to EDU.
+
+- Start curriculum as user
+- Redirect admin to curriculum creation
+- Redirect admin to a specific curriculum page
+
+### 5) Results & Reporting
+
+Used to retrieve learning progress and completion status.
+
+- Learning statuses
+- User activity logs
+- Curriculum audit logs
+
+## Roles (High-Level)
+
+- **Super Admin**: Full platform access.
+- **Admin**: Organization-scoped management and reporting.
+- **Organization Group Admin**: Manages semi-global content for linked organizations.
+- **User**: Follows assigned curricula, trainings, and assessments.
+
+## Typical End-to-End Flow
+
+1. AML syncs organization/admin.
+2. AML checks/updates user status when needed.
+3. AML requests redirect URL to send user/admin into EDU.
+4. EDU tracks progress and exposes statuses/logs via API.
+
+## Related Pages
+
+- [Introduction](/docs/introduction)
+- [Authentication](/docs/authentication)
+- [API Reference](/api)

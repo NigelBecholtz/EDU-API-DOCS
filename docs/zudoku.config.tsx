@@ -44,7 +44,29 @@ const config: ZudokuConfig = {
         {
           type: "category",
           label: "Getting Started",
-          items: ["docs/introduction", "docs/authentication"],
+          items: [
+            "docs/introduction",
+            "docs/overview",
+            "docs/authentication",
+            "docs/logins",
+          ],
+        },
+      ],
+    },
+    {
+      type: "category",
+      label: "Project",
+      link: "project/overview",
+      items: [
+        {
+          type: "category",
+          label: "Project Information",
+          items: [
+            "project/overview",
+            "project/components",
+            "project/database-configuration",
+            "project/logins",
+          ],
         },
       ],
     },

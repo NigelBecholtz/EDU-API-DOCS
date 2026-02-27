@@ -1,0 +1,28 @@
+# Logins
+
+## Overview
+
+The EDU platform has role-based access. Login destination and capabilities depend on the account role.
+
+## Login URLs
+
+| Role | URL | Main Purpose |
+|------|-----|--------------|
+| User | `https://edu.immosurance.net/login` | Follow assigned curricula and assessments |
+| Admin | `https://edu.immosurance.net/login` | Manage organization content and users |
+| Super Admin | `https://edu.immosurance.net/login` | Platform-wide management |
+| Organization Group Admin | `https://edu.immosurance.net/login` | Manage semi-global content for linked organizations |
+
+## Access Notes
+
+- Users only see their assigned learning content.
+- Admins are scoped to their own organization.
+- Organization Group Admins are scoped to their own group content.
+- Super Admins can manage cross-organization entities.
+
+## API Keys (Integrations)
+
+API keys are for server-to-server requests only and are not used for browser login.
+
+- Manage API key usage via the API docs and integration setup.
+- Include `api_key` in query parameters for API calls.
