@@ -1,3 +1,4 @@
+import React from "react";
 import { useState, useEffect } from "react";
 import { Button, Head, Link } from "zudoku/components";
 
@@ -53,13 +54,13 @@ export const ApiKeySettingsPage = () => {
   return (
     <section>
       <Head>
-        <title>API Key Settings — EDU Immosurance API</title>
+        <title>API Key Settings — EDU API</title>
       </Head>
       <div className="max-w-2xl space-y-6">
         <div>
           <h2 className="text-xl font-semibold">API Key for Playground</h2>
           <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
-            Enter your EDU Immosurance API key here. In the{" "}
+            Enter your EDU-issued API key here. In the{" "}
             <Link to="/api">API Reference</Link> Playground, under Query
             Parameters, there is an <strong>api_key</strong> field — enable it and paste
             your key there.

@@ -8,6 +8,10 @@ The EDU platform uses one login entry point with role-based authorization after 
 
 - `https://edu.immosurance.net/login`
 
+## Email Example
+
+- 'support@optimasys.es'
+
 ## Role Access
 
 | Role | Access After Login |
@@ -17,17 +21,17 @@ The EDU platform uses one login entry point with role-based authorization after 
 | Organization Group Admin | Group curricula/trainings/assessments, scoped certificates |
 | Super Admin | Platform-wide administration, org/group management |
 
-## API Keys (Integrations)
+## Integrations
 
-API keys are not for browser login.
+Integration calls between AML and EDU require an `api_key` query parameter.
 
-- Used by server-to-server calls from AML to EDU.
-- Sent as query parameter: `api_key=YOUR_API_KEY`.
-- See [Authentication](/docs/authentication) for full details.
+- API keys are issued by the EDU team.
+- API keys are not provided by Immosurance.
+- Keep communication over HTTPS.
 
 ## Summary
 
 | Login Type | URL | Purpose |
 |-----------|-----|---------|
 | Web Login | `/login` | Interactive platform access |
-| API Auth | Query `api_key` | Integration and automation |
+| Integration API | Query `api_key` (EDU-issued) | Integration and automation |

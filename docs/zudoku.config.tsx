@@ -8,8 +8,8 @@ const EDU_API_KEY_STORAGE = "edu_immosurance_api_key";
 const eduApiKeyPlugin = createApiIdentityPlugin({
   getIdentities: async () => [
     {
-      id: "edu-immosurance-api-key",
-      label: "EDU Immosurance API Key",
+      id: "edu-api-key",
+      label: "EDU API Key",
       authorizeRequest: (request: Request) => {
         if (typeof window === "undefined") return request;
         const apiKey = localStorage.getItem(EDU_API_KEY_STORAGE)?.trim();
