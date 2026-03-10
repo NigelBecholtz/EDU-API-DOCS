@@ -497,8 +497,12 @@ paths:
                       certification_status: certified
                       trainings:
                         - training_id: 10
+                          display_id: "10"
+                          sort_order: 1
                           training_name:
                             en: Intro Training
+                            gr: "..."
+                            al: "..."
                           completion_status: completed
                           latest_score_percent: 100
                           date_last_completion: "2026-01-26T10:15:00.000000Z"

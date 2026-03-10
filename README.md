@@ -441,7 +441,9 @@ Returns learning progress and statuses. Behavior depends on the requesting user:
         "trainings": [
           {
             "training_id": 10,
-            "training_name": { "en": "Intro Training" },
+            "display_id": "10",
+            "sort_order": 1,
+            "training_name": { "en": "Intro Training", "gr": "...", "al": "..." },
             "completion_status": "completed",
             "latest_score_percent": 100,
             "date_last_completion": "2026-01-26T10:15:00.000000Z"
@@ -457,7 +459,11 @@ Returns learning progress and statuses. Behavior depends on the requesting user:
 
 - `training_id`: numeric for a training, `null` for standalone (final) assessments
 - `display_id`: string ID for the UI — same as `training_id` for trainings, or `FA-{assessment_id}` for final/standalone assessments
+- `sort_order`: numeric order (1, 2, 3, …). Trainings are returned in this order. Standalone assessments use `999999`.
+- `training_name`, `course_name`: translation objects with Immosurance language keys (`en`, `nl`, `gr`, `al`, `es_AR`, etc.).
 - `date_last_completion`: date of the last completed assessment (test); uses `completed_at` or `updated_at` on the attempt
+
+**Translation keys:** EDU uses ISO 639-1 internally. For Immosurance responses, keys are mapped: `el`→`gr`, `sq`→`al`, `es`→`es_AR`. Other codes (en, nl, de, fr, it, …) are unchanged.
 
 **Status values**
 
